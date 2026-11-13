@@ -20,6 +20,8 @@ jobs:
           echo "{\"appId\":\"com.sonora.app\",\"appName\":\"Sonora\",\"webDir\":\"$W\"}" > capacitor.config.json
           npx cap add android
           cat gradle-fix.txt >> android/app/build.gradle
+          npm install -D @capacitor/assets
+          npx @capacitor/assets generate --android --iconBackgroundColor '#1e1b4b' --iconBackgroundColorDark '#1e1b4b'
           npx cap sync android
           cd android && chmod +x gradlew && ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
