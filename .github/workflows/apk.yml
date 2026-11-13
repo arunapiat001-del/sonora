@@ -1,0 +1,27 @@
+name: Build APK
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: |
+          npm install
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npm run build
+          if [ -d dist ]; then W=dist; else W=build; fi
+          echo "{\"appId\":\"com.sonora.app\",\"appName\":\"Sonora\",\"webDir\":\"$W\"}" > capacitor.config.json
+          npx cap add android
+          npx cap sync android
+          cd android && chmod +x gradlew && ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sonora-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
