@@ -19,6 +19,7 @@ jobs:
           if [ -d dist ]; then W=dist; else W=build; fi
           echo "{\"appId\":\"com.sonora.app\",\"appName\":\"Sonora\",\"webDir\":\"$W\"}" > capacitor.config.json
           npx cap add android
+          cat gradle-fix.txt >> android/app/build.gradle
           npx cap sync android
           cd android && chmod +x gradlew && ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
